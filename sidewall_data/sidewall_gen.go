@@ -7,10 +7,13 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/exec"
 )
 
 const (
-	dataDir = "sidewall_data/"
+	outFile         = "sidewall.json"
+	dataDir         = "sidewall_data/"
+	versionFilePath = dataDir + "version.txt"
 )
 
 var (
@@ -76,10 +79,12 @@ func main() {
 
 		fmt.Printf("read %d matches from %s\n\n", count, inFile)
 	}
+	fmt.Printf("total match length: %d\n", len(matches))
 	fmt.Println("writing sidewall.json matches")
-	if jsonFile, e := os.Create(dataDir + "sidewall.json"); e != nil {
+	if jsonFile, e := os.Create(dataDir + outFile); e != nil {
 	} else {
 		encoder := json.NewEncoder(jsonFile)
 		encoder.Encode(matches)
+		exec.Command("cp", dataDir+outFile, outFile).Run()
 	}
 }
